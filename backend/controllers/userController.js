@@ -6,16 +6,17 @@ import generateToken from "../utils/token.js";
 // LOGIN for user which will generate token
 // API:: /api/users/login
 const loginUser = asyncHandler(async (req, res) => {
+ 
     const {email, password} = req.body;
 
     const user = await User.findOne({email});
 
     if (user && (await user.matchPassword(password))){
-        generateToken(res, user, _id);
-        const token = user.token
+        const token = generateToken(res, user._id);
+        
 
         res.json({
-            token,
+            token: token,
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -24,7 +25,9 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(401);
         throw new Error('Invalid credentials');
     }
-})
+}
+
+)
 
 
 
@@ -44,9 +47,10 @@ const registerUser = asyncHandler(async(req, res) => {
     console.log(user);
 
     if (user) {
-        generateToken(res, user_id);
+        const token = generateToken(res, user._id);
 
         res.status(201).json({
+            token: token,
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -96,10 +100,10 @@ const updateUserProfile = asyncHandler(async(req, res) => {
             user.password = req.body.password;
         }
 
-        const updateUser = await user.save();
+        const updatedUser = await user.save();
 
         res.json({
-            _id: updateUser._id,
+            _id: updatedUser._id,
             name: updatedUser.name,
             email: updatedUser.email,
         })

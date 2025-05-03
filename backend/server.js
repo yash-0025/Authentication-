@@ -18,7 +18,9 @@ app.use(cookieParser);
 
 
 app.use('/api/users', router);
-console.log(router)
+
+
+
 
 app.use(notFound);
 app.use(errorHandler);
